@@ -180,6 +180,9 @@ let new_mapper argv = Ast_mapper.({
     | x -> default_mapper.expr mapper x);
   structure_item = (fun mapper structure_item ->
     match structure_item with
+    | {pstr_desc = Pstr_eval (expr, attrib); pstr_loc} ->
+      let e = map_expr mapper pstr_loc expr in
+      { structure_item with pstr_desc = Pstr_eval(e, attrib) }
     | {pstr_desc = Pstr_value (rec_flag, value_bindings); pstr_loc} ->
       (* since structure_item gets mapped before expr, need to preemptively
        * apply our expr mapping to the value_bindings to resolve extensions *)
